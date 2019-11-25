@@ -1,0 +1,20 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+
+# User Management
+POST          /signup                                         controllers.UserController.signUp()
+POST          /signin                                         controllers.UserController.signIn()
+POST          /change-password                                controllers.UserController.changePassword()
+POST          /change-email                                   controllers.UserController.changeEmail()
+POST          /reset-password                                 controllers.UserController.resetPassword()
+POST          /new-password                                   controllers.UserController.newPassword()
+
+## Account
+POST          /users                                          controllers.UserController.newUser()
+GET           /users                                          controllers.UserController.getUsers()
+PUT           /users/:id                                      controllers.UserController.updateAccount(id: String)
+GET           /users/me                                       controllers.UserController.getCurrentUser()
+GET           /users/:id                                      controllers.UserController.getUser(id: String)
+DELETE        /users/:id                                      controllers.UserController.deleteAccount(id: String)

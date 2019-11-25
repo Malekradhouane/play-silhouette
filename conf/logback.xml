@@ -1,0 +1,15 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date %level [%X{akkaSource}] %logger{1}: %message%n%xException{10}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name ="com.smart.hostels.channelmanager" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

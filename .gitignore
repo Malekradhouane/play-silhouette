@@ -1,0 +1,14 @@
+logs
+target
+/.idea
+.DS_Store
+/modules/api/.DS_Store
+/modules/.DS_Store
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
+*/node_modules/*
+*npm-debug.log
+/modules/.DS_Store
