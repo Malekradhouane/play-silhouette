@@ -125,13 +125,13 @@ case class UserController @Inject()(
             fullName = computeFullName(data.firstName, data.lastName),
             email = data.email.toLowerCase,
             roles = newUserRoles,
-            activated = false // user need to verify account with verificationCode sent by email
+            activated = false
           )
 
           for {
 
             avatar <- avatarService.retrieveURL(data.email.toLowerCase)
-            _ <- userService.newUser(user.copy(avatarURL = avatar), Some(data))
+            _ <- userService.newUser(user, Some(data))
             authInfo <- authInfoRepository.add(loginInfo, authInfo)
             authenticator <- silhouette.env.authenticatorService.create(loginInfo)
             token <- silhouette.env.authenticatorService.init(authenticator)
@@ -144,8 +144,6 @@ case class UserController @Inject()(
 
             Ok(Json.obj(
               "token" -> token,
-              "userId" -> user._id.get.stringify,
-              "activated" -> user.activated
             ))
           }
       }
@@ -228,32 +226,6 @@ case class UserController @Inject()(
     }
   }
 
-  def resetPassword() = Action.async(parse.json) { implicit request =>
-    request.body.validate[ResetPasswordForm.Data].map { data =>
-      val loginInfo = LoginInfo(CredentialsProvider.ID, data.email.toLowerCase)
-      userService.retrieve(loginInfo).flatMap {
-        case None =>
-          Future.successful(BadRequest(Json.obj("message" -> Messages("Aucun compte n’existe avec cette adresse email"))))
-
-        case Some(user) =>
-          for {
-            avatar <- avatarService.retrieveURL(data.email.toLowerCase)
-
-            authenticator <- silhouette.env.authenticatorService.create(loginInfo)
-
-            token <- silhouette.env.authenticatorService.init(authenticator)
-            result <- silhouette.env.authenticatorService.renew(authenticator, Ok("success"))
-
-
-          } yield {
-            Ok(Json.obj("token" -> token))
-          }
-      }
-    }.recoverTotal {
-      case error =>
-        Future.successful(Unauthorized(Json.obj("message" -> Messages("invalid.data"))))
-    }
-  }
 
   def newPassword = SecuredAction(WithService(userWrite)).async(parse.json) { implicit request =>
 
@@ -293,7 +265,7 @@ case class UserController @Inject()(
       case Some(user) =>
         for {
 
-          _ <- userService.updateUser(user._id.get.stringify, user.copy(activated = true, roles = activatedAccount))
+          _ <- userService.updateUser(user._id.get.stringify, user.copy(activated = true))
 
 
         } yield {

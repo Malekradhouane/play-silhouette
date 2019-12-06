@@ -8,7 +8,6 @@ POST          /signup                                         controllers.UserCo
 POST          /signin                                         controllers.UserController.signIn()
 POST          /change-password                                controllers.UserController.changePassword()
 POST          /change-email                                   controllers.UserController.changeEmail()
-POST          /reset-password                                 controllers.UserController.resetPassword()
 POST          /new-password                                   controllers.UserController.newPassword()
 
 ## Account
